@@ -1,4 +1,4 @@
-# Integrating Authillo with a React App
+# React App Integrated with Authillo
 
 > ### dependencies used in this example app
 >
