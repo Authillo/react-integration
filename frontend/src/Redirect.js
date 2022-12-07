@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const Redirect = () => {
+  const [name, setName] = useState("");
   useEffect(() => {
     console.log("redirect mounted");
     const queryParams = new URLSearchParams(window.location.search);
@@ -13,11 +14,18 @@ export const Redirect = () => {
       })
       .then((response) => {
         console.log(response, "response from fetch");
+        console.log("userInfo:", response?.userInfo);
+        try {
+          const parse = JSON.parse(response);
+          console.log(parse?.userInfo);
+          setName(parse?.userInfo?.userAttributes?.nickname);
+        } catch (err) {
+          console.log("error: ", err);
+        }
       });
   }, []);
   return (
     <div>
-      Redirect
       <button
         onClick={() => {
           window.location.search = "";
@@ -26,6 +34,7 @@ export const Redirect = () => {
       >
         Home
       </button>
+      <div>{name !== "" && name !== undefined && `Hello ${name}`}</div>
     </div>
   );
 };

@@ -2,6 +2,7 @@ const express = require("express");
 const crypto = require("node:crypto");
 const fetch = require("node-fetch");
 const jwt = require("jsonwebtoken");
+const { userInfo } = require("node:os");
 const app = express();
 const port = 5001;
 const clientId = "egE7AmFhWu40nDx3vm7x9HQOgjuUxHhuU8WP8mjAviY";
@@ -60,46 +61,49 @@ app.get("/getCodeChallenge", (req, res) => {
 app.get("/codeResponse", async (req, res) => {
   console.log(req.query);
   const code = req.query.code;
-  // make token request here
-
   const url = `http://localhost:3000/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect_uri}&code_verifier=${codeVerifier}&client_id=${clientId}&client_secret=${clientSecret}&request_type=OIDC`;
-  // fetch(url, {
-  //   method: "POST",
-  // })
-  //   .then((res) => {
-  //     return res.json();
-  //   })
-  //   .then((response) => {
-  //     console.log(response);
-  //   });
-
   const tokenRes = await fetch(url, {
     method: "POST",
   });
   const parsed = await tokenRes.json();
   console.log(parsed);
-  accessToken = parsed.result.feedback.access_token;
-  const idToken = parsed.result.feedback.id_token;
+  accessToken = parsed?.result?.feedback?.access_token;
+  const idToken = parsed?.result?.feedback?.id_token;
   console.log(idToken);
   let verifiedToken;
   try {
     verifiedToken = jwt.verify(idToken, jwtKey);
     console.log("token is valid: ", verifiedToken);
   } catch (err) {
-    console.log("in catch");
+    console.log("invalid token");
     console.log(err);
   }
 
   // const parsed = JSON.parse(tokenRes);
   // console.log(parsed);
   // const token = parsed?.body;
-
+  const userInfo = await userInfoReq(accessToken);
+  console.log("userInfo in codeResponse: ", userInfo);
   res.json(
     JSON.stringify({
       idToken: verifiedToken,
+      userInfo,
     })
   );
 });
+
+const userInfoReq = async (token) => {
+  const url = `http://localhost:3000/userinfo`;
+  const useRInfoRes = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const parsedRes = await useRInfoRes.json();
+  console.log(parsedRes);
+  console.log(parsedRes?.result?.feedback);
+  return parsedRes?.result?.feedback;
+};
 
 app.listen(port, () => {
   console.log(`express server started listening on ${port}`);

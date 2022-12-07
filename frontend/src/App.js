@@ -18,19 +18,6 @@ function App() {
   return (
     <div className="App">
       <h1>Welcome to Authillo React integration example</h1>
-      <button
-        onClick={() => {
-          fetch("http://localhost:5001/")
-            .then((res) => {
-              return res.json();
-            })
-            .then((response) => {
-              console.log(response, "response from fetch");
-            });
-        }}
-      >
-        fetch
-      </button>
       <div>
         <button
           onClick={() => {
@@ -41,7 +28,7 @@ function App() {
               .then((response) => {
                 const parsedResponse = JSON.parse(response);
                 console.log(parsedResponse, "response from fetch");
-                const scopes = `openid`;
+                const scopes = `openid name`;
                 const clientId = "egE7AmFhWu40nDx3vm7x9HQOgjuUxHhuU8WP8mjAviY";
                 const maxAge = 3600;
                 const codeChallenge = parsedResponse.codeChallenge;
@@ -52,19 +39,6 @@ function App() {
           }}
         >
           Login
-        </button>
-        <button
-          onClick={() => {
-            fetch("http://localhost:5001/oidcRequest")
-              .then((res) => {
-                return res.json();
-              })
-              .then((response) => {
-                console.log(response, "response from fetch");
-              });
-          }}
-        >
-          OIDC
         </button>
       </div>
     </div>
