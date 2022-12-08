@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 export const Redirect = () => {
   const [name, setName] = useState("");
+  const [userInfo, setUserInfo] = useState(null);
   useEffect(() => {
     console.log("redirect mounted");
     const queryParams = new URLSearchParams(window.location.search);
@@ -19,6 +20,7 @@ export const Redirect = () => {
           const parse = JSON.parse(response);
           console.log(parse?.userInfo);
           setName(parse?.userInfo?.userAttributes?.nickname);
+          setUserInfo(parse?.userInfo);
         } catch (err) {
           console.log("error: ", err);
         }
@@ -35,6 +37,7 @@ export const Redirect = () => {
         Home
       </button>
       <div>{name !== "" && name !== undefined && `Hello ${name}`}</div>
+      {userInfo != null && <div>Response: {JSON.stringify(userInfo)}</div>}
     </div>
   );
 };
