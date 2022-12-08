@@ -10,7 +10,6 @@ const router = createBrowserRouter([
   {
     path: "redirect",
     element: <Redirect />,
-    // element: <>hello</>,
   },
 ]);
 
@@ -28,12 +27,12 @@ function App() {
               .then((response) => {
                 const parsedResponse = JSON.parse(response);
                 console.log(parsedResponse, "response from fetch");
-                const scopes = `openid name`;
+                const scopes = `openid name face`;
                 const clientId = "egE7AmFhWu40nDx3vm7x9HQOgjuUxHhuU8WP8mjAviY";
                 const maxAge = 3600;
                 const codeChallenge = parsedResponse.codeChallenge;
                 console.log(codeChallenge);
-                const redirectLink = `http://localhost:4200/authorize?response_type=code&scope=${scopes}&state=undefined&redirect_uri=localhost:3001/redirect&client_id=${clientId}&max_age=${maxAge}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+                const redirectLink = `https://dev.authillo.com/authorize?response_type=code&scope=${scopes}&state=undefined&redirect_uri=localhost:3001/redirect&client_id=${clientId}&max_age=${maxAge}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
                 window.location.href = redirectLink;
               });
           }}

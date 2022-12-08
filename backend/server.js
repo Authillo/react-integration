@@ -61,16 +61,24 @@ app.get("/getCodeChallenge", (req, res) => {
 app.get("/codeResponse", async (req, res) => {
   console.log(req.query);
   const code = req.query.code;
-  const url = `http://localhost:3000/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect_uri}&code_verifier=${codeVerifier}&client_id=${clientId}&client_secret=${clientSecret}&request_type=OIDC`;
+  console.log(new Date().toISOString());
+  const url = `https://dev.auth.authillo.com/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect_uri}&code_verifier=${codeVerifier}&client_id=${clientId}&client_secret=${clientSecret}&request_type=OIDC`;
+  // const url = `http://localhost:3000/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect_uri}&code_verifier=${codeVerifier}&client_id=${clientId}&client_secret=${clientSecret}&request_type=OIDC`;
+
   const tokenRes = await fetch(url, {
     method: "POST",
   });
+  console.log(new Date().toISOString());
+
   const parsed = await tokenRes.json();
+  console.log(new Date().toISOString());
+
   console.log(parsed);
   accessToken = parsed?.result?.feedback?.access_token;
   const idToken = parsed?.result?.feedback?.id_token;
   console.log(idToken);
   let verifiedToken;
+
   try {
     verifiedToken = jwt.verify(idToken, jwtKey);
     console.log("token is valid: ", verifiedToken);
@@ -83,6 +91,8 @@ app.get("/codeResponse", async (req, res) => {
   // console.log(parsed);
   // const token = parsed?.body;
   const userInfo = await userInfoReq(accessToken);
+  console.log(new Date().toISOString());
+
   console.log("userInfo in codeResponse: ", userInfo);
   res.json(
     JSON.stringify({
@@ -93,7 +103,9 @@ app.get("/codeResponse", async (req, res) => {
 });
 
 const userInfoReq = async (token) => {
-  const url = `http://localhost:3000/userinfo`;
+  const url = `https://dev.auth.authillo.com/userinfo`;
+  // const url = `http://localhost:3000/userinfo`;
+
   const useRInfoRes = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
