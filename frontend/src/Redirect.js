@@ -37,6 +37,11 @@ export const Redirect = () => {
         Home
       </button>
       <div>{name !== "" && name !== undefined && `Hello ${name}`}</div>
+      <div>
+        {JSON.stringify(userInfo).includes("riskScore") && (
+          <h4>Face Verified = true</h4>
+        )}
+      </div>
       {userInfo != null && <div>Response: {JSON.stringify(userInfo)}</div>}
     </div>
   );
