@@ -16,34 +16,17 @@ let codeVerifier;
 let accessToken;
 
 app.use(function (req, res, next) {
-  // Website you wish to allow to connect
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3001");
-
-  // Request methods you wish to allow
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, OPTIONS, PUT, PATCH, DELETE"
   );
-
-  // Request headers you wish to allow
   res.setHeader(
     "Access-Control-Allow-Headers",
     "X-Requested-With,content-type"
   );
-
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
   res.setHeader("Access-Control-Allow-Credentials", true);
-
-  // Pass to next layer of middleware
   next();
-});
-app.get("/", (req, res) => {
-  res.json(
-    JSON.stringify({
-      test: "test return",
-    })
-  );
 });
 
 app.get("/getCodeChallenge", (req, res) => {
@@ -55,28 +38,6 @@ app.get("/getCodeChallenge", (req, res) => {
   res.json(
     JSON.stringify({
       codeChallenge,
-    })
-  );
-});
-
-app.post("/submitimage", async (req, res) => {
-  // const parsed = await express.json(req);
-  console.log(req.body);
-  const url = `http://localhost:3000/comparefaces?id=${userId}&clientId=${clientId}$clientSecret=${clientSecret}`;
-  try {
-    const compareRes = await fetch({
-      url,
-      body: {
-        image,
-      },
-    });
-    console.log(compareRes);
-  } catch (err) {
-    console.log(err);
-  }
-  res.json(
-    JSON.stringify({
-      reuslt: "test result",
     })
   );
 });
@@ -109,10 +70,6 @@ app.get("/codeResponse", async (req, res) => {
     console.log("invalid token");
     console.log(err);
   }
-
-  // const parsed = JSON.parse(tokenRes);
-  // console.log(parsed);
-  // const token = parsed?.body;
   const userInfo = await userInfoReq(accessToken);
   console.log(new Date().toISOString());
 

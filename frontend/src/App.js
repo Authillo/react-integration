@@ -65,35 +65,6 @@ function App() {
           Login (face required)
         </button>
       </div>
-      <div>
-        <input
-          type="file"
-          onChange={(e) => {
-            if (e.target.files && e.target.files.length > 0) {
-              console.log(e.target.files.item(0));
-              const reader = new FileReader();
-              reader.addEventListener("load", () => {
-                setImage(reader?.result?.toString() ?? null);
-              });
-              reader.readAsDataURL(e.target.files[0]);
-            }
-          }}
-        ></input>
-        <button
-          onClick={() => {
-            fetch(`http://localhost:5001/submitimage`, {
-              method: "POST",
-              body: {
-                image,
-              },
-            }).then((response) => {
-              console.log(response);
-            });
-          }}
-        >
-          Upload Image
-        </button>
-      </div>
     </div>
   );
 }
