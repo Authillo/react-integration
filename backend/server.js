@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const { userInfo } = require("node:os");
 const app = express();
 const port = 5001;
+const userId = `962e3475-2d34-4a6f-a301-8b9fb8b36ecc`;
 const clientId = "egE7AmFhWu40nDx3vm7x9HQOgjuUxHhuU8WP8mjAviY";
 const clientSecret =
   "lPi7i_NOLBbI9mVvvpoQWv8W_zFp0kAYp-LeG4Vb2OVt6RFtpvjH21lTurZMEjpZqaD4y6YuS_dKsY2UV8wl4Yu5nWFP9M9RfvyGL6F_QoYM1v1OlZxogpL3fOQEhr73qZx5Y4_goldnUbCxKZwxtQhCTx-mKZj766EoUrCXuM1Ck1S7u4CEy_kTBkiSXFhwpADVjQxzKNgfpZGdeXEDBlBsauZ6Fd13PrY02ez9KjS2_tZnCeTld9sM9PdPc-FJCSnQDQLrcEnWK3YAc4UVJjhHtBU4UbkfgqbTHGUtV8z5ypNyg-jEmZsvqbVe2VYjxJkD9_ZkI4V-VL1ZBiS3IQ";
@@ -54,6 +55,28 @@ app.get("/getCodeChallenge", (req, res) => {
   res.json(
     JSON.stringify({
       codeChallenge,
+    })
+  );
+});
+
+app.post("/submitimage", async (req, res) => {
+  // const parsed = await express.json(req);
+  console.log(req.body);
+  const url = `http://localhost:3000/comparefaces?id=${userId}&clientId=${clientId}$clientSecret=${clientSecret}`;
+  try {
+    const compareRes = await fetch({
+      url,
+      body: {
+        image,
+      },
+    });
+    console.log(compareRes);
+  } catch (err) {
+    console.log(err);
+  }
+  res.json(
+    JSON.stringify({
+      reuslt: "test result",
     })
   );
 });

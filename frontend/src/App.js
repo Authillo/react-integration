@@ -1,6 +1,7 @@
 import "./App.css";
 import { createBrowserRouter } from "react-router-dom";
 import { Redirect } from "./Redirect";
+import { useState } from "react";
 
 const router = createBrowserRouter([
   {
@@ -14,9 +15,33 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const [image, setImage] = useState(null);
   return (
     <div className="App">
       <h1>Welcome to Authillo React integration example</h1>
+      <div>
+        <button
+          onClick={() => {
+            fetch("http://localhost:5001/getCodeChallenge")
+              .then((res) => {
+                return res.json();
+              })
+              .then((response) => {
+                const parsedResponse = JSON.parse(response);
+                console.log(parsedResponse, "response from fetch");
+                const scopes = `openid name`;
+                const clientId = "egE7AmFhWu40nDx3vm7x9HQOgjuUxHhuU8WP8mjAviY";
+                const maxAge = 3600;
+                const codeChallenge = parsedResponse.codeChallenge;
+                console.log(codeChallenge);
+                const redirectLink = `https://dev.authillo.com/authorize?response_type=code&scope=${scopes}&state=undefined&redirect_uri=localhost:3001/redirect&client_id=${clientId}&max_age=${maxAge}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+                window.location.href = redirectLink;
+              });
+          }}
+        >
+          Login
+        </button>
+      </div>
       <div>
         <button
           onClick={() => {
@@ -37,7 +62,36 @@ function App() {
               });
           }}
         >
-          Login
+          Login (face required)
+        </button>
+      </div>
+      <div>
+        <input
+          type="file"
+          onChange={(e) => {
+            if (e.target.files && e.target.files.length > 0) {
+              console.log(e.target.files.item(0));
+              const reader = new FileReader();
+              reader.addEventListener("load", () => {
+                setImage(reader?.result?.toString() ?? null);
+              });
+              reader.readAsDataURL(e.target.files[0]);
+            }
+          }}
+        ></input>
+        <button
+          onClick={() => {
+            fetch(`http://localhost:5001/submitimage`, {
+              method: "POST",
+              body: {
+                image,
+              },
+            }).then((response) => {
+              console.log(response);
+            });
+          }}
+        >
+          Upload Image
         </button>
       </div>
     </div>
