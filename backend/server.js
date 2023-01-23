@@ -47,18 +47,13 @@ app.get("/getCodeChallenge", (req, res) => {
 app.get("/codeResponse", async (req, res) => {
   console.log(req.query);
   const code = req.query.code;
-  console.log(new Date().toISOString());
   // const url = `https://dev.auth.authillo.com/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect_uri}&code_verifier=${codeVerifier}&client_id=${clientId}&client_secret=${clientSecret}&request_type=OIDC`;
   const url = `http://localhost:3000/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect_uri}&code_verifier=${codeVerifier}&client_id=${clientId}&client_secret=${clientSecret}&request_type=OIDC`;
 
   const tokenRes = await fetch(url, {
     method: "POST",
   });
-  console.log(new Date().toISOString());
-
   const parsed = await tokenRes.json();
-  console.log(new Date().toISOString());
-
   console.log(parsed);
   accessToken = parsed?.result?.feedback?.access_token;
   const idToken = parsed?.result?.feedback?.id_token;
@@ -72,15 +67,18 @@ app.get("/codeResponse", async (req, res) => {
     console.log("invalid token");
     console.log(err);
   }
-  const userInfo = await userInfoReq(accessToken);
-  console.log(new Date().toISOString());
+  let userInfo;
+  if (req.query.makeUserInfoReq === "true") {
+    userInfo = await userInfoReq(accessToken);
+    console.log(new Date().toISOString());
+    console.log("userInfo in codeResponse: ", userInfo);
+  }
 
-  console.log("userInfo in codeResponse: ", userInfo);
   res.json(
     JSON.stringify({
       idTokenParsed: verifiedToken,
       idToken,
-      userInfo,
+      userInfo: userInfo ?? null,
     })
   );
 });
