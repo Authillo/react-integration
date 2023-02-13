@@ -20,8 +20,8 @@ function App() {
   const [userId, setUserId] = useState("");
   const [jwt, setJwt] = useState("");
   const [parsedJWT, setParsedJWT] = useState("");
-  const clientId = "w3qi-IP24Vc6mFafN1ZCUuY5VhtjiU5aCu9hrC50Kg8";
-  const redirectUrl = "localhost:3001/redirect";
+  const clientId = "uFzlKSz9tXvKncpiYng4CfdOdB8oJurM1jWpaQmj5vQ";
+  const redirectUrl = "http://localhost:3001/redirect";
   useEffect(() => {
     fetch("http://localhost:5001/getCodeChallenge")
       .then((res) => {
@@ -36,11 +36,9 @@ function App() {
   return (
     <div className="App">
       <h1>Welcome to Authillo React integration example</h1>
-
       {codeChallenge !== "" && jwt === "" && (
         <IframeSignIn
-          expectedOrigin="http://localhost:4200"
-          platformName="Test%20Name"
+          platformName="Test%20Platform"
           codeChallenge={codeChallenge}
           clientId={clientId}
           redirectUrl={redirectUrl}
@@ -77,7 +75,7 @@ function App() {
           <pre>JWT Parsed: {JSON.stringify(parsedJWT, null, 2)}</pre>
         )}
       </div>
-      {/* <div>
+      <div>
         <button
           onClick={() => {
             fetch("http://localhost:5001/getCodeChallenge")
@@ -88,18 +86,17 @@ function App() {
                 const parsedResponse = JSON.parse(response);
                 console.log(parsedResponse, "response from fetch");
                 const scopes = `openid face`;
-                const clientId = "egE7AmFhWu40nDx3vm7x9HQOgjuUxHhuU8WP8mjAviY";
                 const maxAge = 3600;
                 const codeChallenge = parsedResponse.codeChallenge;
                 console.log(codeChallenge);
-                const redirectLink = `https://dev.authillo.com/authorize?response_type=code&scope=${scopes}&state=undefined&redirect_uri=localhost:3001/redirect&client_id=${clientId}&max_age=${maxAge}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+                const redirectLink = `https://authillo.com/authorize?response_type=code&scope=${scopes}&state=undefined&redirect_uri=localhost:3001/redirect&client_id=${clientId}&max_age=${maxAge}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
                 window.location.href = redirectLink;
               });
           }}
         >
           Login (face required)
         </button>
-      </div> */}
+      </div>
     </div>
   );
 }

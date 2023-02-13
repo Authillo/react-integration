@@ -8,7 +8,10 @@ export const Redirect = () => {
     const queryParams = new URLSearchParams(window.location.search);
     fetch(
       "http://localhost:5001/codeResponse?" +
-        new URLSearchParams({ code: queryParams.get("code") })
+        new URLSearchParams({
+          code: queryParams.get("code"),
+          makeUserInfoReq: true,
+        })
     )
       .then((res) => {
         return res.json();
